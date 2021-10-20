@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lottery</title>
+	<meta name='viewport' content="width=device-width, initial-scale=1">
+</head>
+
+<style type="text/css">
+	h1 {text-align: center; font-size: 55px;}
+	h3,p {display: inline; font-size: 30px;}
+</style>
+
+<body style="background-color: #99CE54" onload="run()">
+	<h1>Lucky for Life</h1>
+	<h3>Random Pick: </h3>
+	<p id="randPick"> 0 </p> </br>
+	<h3>Pick Sorted: </h3>
+	<p id="randSort"> 0 </p> </br>
+	<h3>Winning numbers sorted: </h3>
+	<p id="winSort"> 0 </p> </br>
+	<h3>Number Matching: </h3>
+	<p id="numMatch"> 0 </p> </br>
+	<h3>Lucky ball </h3>
+	<p id="luckMatch"> 0 </p> </br>
+	<h3>Your winnings: </h3>
+	<p id="winnings"> None </p> </br>
+
+	<script type="text/javascript">
+		function run() {
+			//get input
+			var input = prompt("Enter winning numbers", "1 2 3 4 5");
+			var userLucky = prompt("Enter lucky number", "4");
+
+
+			//lucky numbers generated
+			var luck = Math.floor(Math.random() * 17 +1);
+
+			//save into array
+			var userArray = new Array(5);
+			userArray = input.split(' ');
+			//take each element of array and place into string
+			var sortedString ="";
+			for (let i = 0; i < 5; i++) {
+				sortedString += userArray[i] + " ";
+			}
+			document.getElementById('randPick').innerHTML = sortedString + "lucky " + userLucky;
+
+			//Sort user numbers in order
+			//sort was only looking at first digit, used stack overflow for help with function
+			userArray = userArray.sort(function (a,b) {return a-b;});
+			var userSorted ="";
+			for (let i = 0; i < 5; i++) {
+				userSorted += userArray[i] + " ";
+			}
+			document.getElementById('randSort').innerHTML = userSorted + " lucky " + userLucky;
+
+			//create array of random numbers (winning nums)
+			var go = 1;
+			var winningArray = new Array(5);
+			for (let i = 0; i<5; i++) {
+				var n = Math.floor(Math.random()*47 +1);
+				//check that num is unique
+				if (winningArray.indexOf(n) == -1) {
+					winningArray.push(n);
+				}
+			}
+
+
+			//sort the winning array
+			winningArray = winningArray.sort(function (a,b) {return a-b;});
+			sortedString = "";
+			for (let i = 0; i < 5; i++) {
+				sortedString += winningArray[i] + " ";
+			}
+			document.getElementById('winSort').innerHTML = sortedString + " lucky " + luck;
+
+			//check if lucky balls match
+			if (luck ==userLucky) {
+				document.getElementById('luckMatch').innerHTML = "does match";
+			} else {
+				document.getElementById('luckMatch').innerHTML = "does not match";
+			}
+
+			//loop through each array to find matches
+			var numMatches = 0;
+			for (let i = 0; i < 5; i++) {
+				for (let j = 0; j < 5; j++) {
+					if (winningArray[i] == userArray[j]) {
+						numMatches++;
+					}
+				}
+			}
+			document.getElementById('numMatch').innerHTML = numMatches;
+
+			//calculate winnings
+			var calculations = "$0.00";
+			if (numMatches == 5) {
+				if (luck == userLucky) {
+					calculations = "7,000 a WEEK for LIFE";
+				} else calculations = "25,000 a YEAR for LIFE";
+			} else if (numMatches == 4) {
+				if (luck == userLucky) {
+					calculations = "5,000";
+				} else calculations = "200";
+			} else if (numMatches == 3) {
+				if (luck == userLucky) {
+					calculations = "150";
+				} else calculations = "20";
+			} else if (numMatches == 2) {
+				if (luck == userLucky) {
+					calculations = "25";
+				} else calculations = "3";
+			} else if (numMatches == 1) {
+				if (luck == userLucky) {
+					calculations = "6";
+				}
+			} else if (numMatches == 0) {
+				if (luck == userLucky) calculations = "4";
+			}
+			document.getElementById('winnings').innerHTML = calculations;
+		}
+	</script>
+
+
+</body>
